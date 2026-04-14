@@ -1,56 +1,34 @@
-// node --version # Should be >= 18
-// npm install @google/generative-ai
+// src/config/Gemini.js
 
-import {
-	GoogleGenerativeAI,
-	HarmCategory,
-	HarmBlockThreshold,
-} from "@google/generative-ai";
+const BACKEND_URL = "http://localhost:5000/api/chat";
 
-const MODEL_NAME = "gemini-1.0-pro";
-const API_KEY = import.meta.env.VITE_API_KEY;;
+const runChat = async (prompt) => {
+  try {
+    const res = await fetch(BACKEND_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt }),
+    });
 
-async function runChat(prompt) {
-	const genAI = new GoogleGenerativeAI(API_KEY);
-	const model = genAI.getGenerativeModel({ model: MODEL_NAME });
+    const data = await res.json();
+    console.log("Backend raw response:", data);
 
-	const generationConfig = {
-		temperature: 0.9,
-		topK: 1,
-		topP: 1,
-		maxOutputTokens: 2048,
-	};
+    // If backend replied normally
+    if (res.ok && data.reply) {
+      return data.reply; // just the text from Gemini
+    }
 
-	const safetySettings = [
-		{
-			category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-			threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-		},
-		{
-			category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-			threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-		},
-		{
-			category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-			threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-		},
-		{
-			category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-			threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-		},
-	];
+    // If backend sent an error field
+    if (data.error) {
+      return `Error from server: ${data.error}`;
+    }
 
-	const chat = model.startChat({
-		generationConfig,
-		safetySettings,
-		history: [
-		],
-	});
-
-	const result = await chat.sendMessage(prompt);
-	const response = result.response;
-	console.log(response.text());
-	return response.text();
-}
+    // Fallback in case of weird shape
+    return "Unexpected server response.";
+  } catch (err) {
+    console.error("Network/server error in runChat:", err);
+    return `Network error: ${String(err.message || err)}`;
+  }
+};
 
 export default runChat;

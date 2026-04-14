@@ -1,0 +1,114 @@
+/* General styles for the Telugu keyboard */
+.telugu-keyboard {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
+    background-color: #2a2a2a;
+    border-radius: 10px;
+    justify-content: center;
+    max-width: 600px; /* Adjust keyboard width */
+    margin: 0 auto;
+}
+
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.key {
+    flex: 1; /* Make keys flexible to fit the row */
+    padding: 8px 10px;
+    font-size: 14px; /* Adjust font size */
+    color: #eaeaea;
+    background-color: #3a3a3a;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center;
+    max-width: 60px; /* Set a maximum width for keys */
+}
+
+.key:hover {
+    background-color: #4b90ff;
+}
+
+.key.space {
+    flex: 2; /* Make the space key larger */
+    text-align: center;
+}
+
+.key.backspace {
+    background-color: #ff5546;
+    color: #fff;
+}
+
+.key.shift {
+    background-color: #4b90ff;
+    color: #fff;
+}
+
+/* Hidden matras row by default */
+.hidden {
+    display: none;
+}
+
+/* Show matras row when active */
+.matras {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+/* Responsive styles for smaller screens */
+@media (max-width: 768px) {
+    .telugu-keyboard {
+        max-width: 100%; /* Use full width on smaller screens */
+        padding: 5px; /* Reduce padding */
+    }
+
+    .keyboard-row {
+        gap: 3px; /* Reduce gap between keys */
+    }
+
+    .key {
+        flex: 1; /* Ensure keys stretch to fit the row */
+        padding: 6px 8px; /* Reduce key padding */
+        font-size: 12px; /* Smaller font size for keys */
+        max-width: 50px; /* Reduce max width for keys */
+    }
+
+    .key.space {
+        flex: 2; /* Keep space key larger */
+    }
+}
+
+/* Styles for very small screens (e.g., phones) */
+@media (max-width: 480px) {
+    .telugu-keyboard {
+        padding: 5px; /* Further reduce padding */
+    }
+
+    .keyboard-row {
+        gap: 2px; /* Further reduce gap between keys */
+    }
+
+    .key {
+        flex: 1; /* Ensure keys stretch to fit the row */
+        padding: 5px 6px; /* Further reduce key padding */
+        font-size: 10px; /* Smaller font size for keys */
+        max-width: 40px; /* Further reduce max width for keys */
+    }
+
+    .key.space {
+        flex: 2; /* Keep space key larger */
+    }
+}
+
+/* Active state for Shift key */
+.key.shift.active {
+    background-color: #ff5546;
+    color: #fff;
+}

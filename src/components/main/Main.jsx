@@ -1,4 +1,4 @@
-import { useContext, useRef, useEffect } from "react";
+import { useContext, useRef, useEffect, useState } from "react";
 import { assets } from "../../assets/assets";
 import "./main.css";
 import { Context } from "../../context/Context";
@@ -14,85 +14,86 @@ const Main = () => {
     input,
   } = useContext(Context);
 
-  const resultContainerRef = useRef(null); // Create a ref for result container
+  const resultContainerRef = useRef(null);
+  const [isRecording, setIsRecording] = useState(false);
 
-  const handleCardClick = (promptText) => {
-    setInput(promptText);
-  };
-
-  // Auto-scroll to bottom when resultData or loading changes
   useEffect(() => {
     if (resultContainerRef.current) {
-      resultContainerRef.current.scrollTop = resultContainerRef.current.scrollHeight;
+      resultContainerRef.current.scrollTop =
+        resultContainerRef.current.scrollHeight;
     }
-  }, [resultData, loading]); // Trigger scroll when resultData or loading changes
+  }, [resultData, loading]);
+
+  const handleMicClick = () => {
+    if (!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
+      alert("Your browser does not support speech recognition.");
+      return;
+    }
+
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = "te-IN";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      setIsRecording(true);
+    };
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setInput(transcript);
+    };
+
+    recognition.onerror = () => {
+      alert("Error occurred during voice recognition. Please try again.");
+    };
+
+    recognition.onend = () => {
+      setIsRecording(false);
+    };
+
+    recognition.start();
+  };
+
+  const handleSend = () => {
+    if (!loading && input.trim() !== "") {
+      onSent();
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSend();
+    }
+  };
 
   return (
     <div className="main">
       <div className="nav">
-        <p>Gemini</p>
+        <p>మాతృAI</p>
         <img src={assets.user} alt="" />
       </div>
+
       <div className="main-container">
         {!showResults ? (
-          <>
-            <div className="greet">
-              <p>
-                <span>Hello , Dev </span>
-              </p>
-              <p>How Can i Help You Today?</p>
-            </div>
-            <div className="cards">
-              <div
-                className="card"
-                onClick={() =>
-                  handleCardClick("Suggest Some Place To Visit In West Bengal")
-                }
-              >
-                <p>Suggest Some Place To Visit In West Bengal </p>
-                <img src={assets.compass_icon} alt="" />
-              </div>
-              <div
-                className="card"
-                onClick={() =>
-                  handleCardClick(
-                    "Brainstorm team bonding activities for our work retreat"
-                  )
-                }
-              >
-                <p>Brainstorm team bonding activities for our work retreat </p>
-                <img src={assets.message_icon} alt="" />
-              </div>
-              <div
-                className="card"
-                onClick={() =>
-                  handleCardClick("How to Create a Gyroscope using Disc?")
-                }
-              >
-                <p>How to Create a Gyroscope using Disc?</p>
-                <img src={assets.bulb_icon} alt="" />
-              </div>
-              <div
-                className="card"
-                onClick={() => {
-                  handleCardClick(
-                    "Create a Script for the youtube video about coding "
-                  );
-                }}
-              >
-                <p>Create a Script for the youtube video about coding </p>
-                <img src={assets.code_icon} alt="" />
-              </div>
-            </div>
-          </>
+          <div className="greet">
+            <p><span>హలో,</span></p>
+            <p>ఈ రోజు మీకు ఎలా సహాయం చేయగలను?</p>
+          </div>
         ) : (
           <div className="result" ref={resultContainerRef}>
             <div className="result-title">
               <img src={assets.user} alt="" />
               <p>{recentPrompt}</p>
             </div>
+
             <div className="result-data">
               <img src={assets.gemini_icon} alt="" />
+
               {loading ? (
                 <div className="loader">
                   <hr />
@@ -100,7 +101,9 @@ const Main = () => {
                   <hr />
                 </div>
               ) : (
-                <p dangerouslySetInnerHTML={{ __html: resultData }}></p>
+                <p className="result-text">
+                  {resultData || "సమాధానం అందలేదు."}
+                </p>
               )}
             </div>
           </div>
@@ -108,33 +111,41 @@ const Main = () => {
 
         <div className="main-bottom">
           <div className="search-box">
+            <div>
+              <img
+                src={assets.mic_icon}
+                alt="Mic"
+                onClick={handleMicClick}
+                style={{
+                  cursor: "pointer",
+                  opacity: isRecording ? 0.5 : 1,
+                  marginRight: "10px",
+                }}
+              />
+            </div>
+
             <input
               onChange={(e) => setInput(e.target.value)}
               value={input}
               type="text"
-              placeholder="Enter the Prompt Here..."
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') { // Check if Enter key is pressed
-                  onSent(); // Call onSent function when Enter is pressed
-                }
-              }}
+              placeholder="ఇక్కడ ప్రాంప్ట్‌ను నమోదు చేయండి..."
+              onKeyDown={handleKeyDown}
             />
+
             <div>
-              {/* <img src={assets.gallery_icon} alt="" /> */}
-              {/* <img src={assets.mic_icon} alt="" /> */}
               <img
                 src={assets.send_icon}
-                alt=""
-                onClick={() => {
-                  onSent();
-                }}
+                alt="Send"
+                onClick={handleSend}
+                style={{ cursor: "pointer" }}
               />
             </div>
           </div>
+
           <div className="bottom-info">
             <p>
-              Gemini may display inaccurate info, including about people, so
-              double-check its responses. Your privacy & Gemini Apps
+              మాతృAI తప్పు సమాచారం చూపించవచ్చు, ముఖ్యంగా వ్యక్తుల గురించి, కాబట్టి దాని
+              సమాధానాలను రెండుసార్లు తనిఖీ చేయండి.
             </p>
           </div>
         </div>

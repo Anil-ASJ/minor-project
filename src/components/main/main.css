@@ -40,6 +40,7 @@
 .main .greet span {
 	background: -webkit-linear-gradient(16deg, #4b90ff, #ff5546);
 	-webkit-background-clip: text;
+	background-clip: text;
 	-webkit-text-fill-color: transparent;
 }
 
@@ -199,4 +200,91 @@
 	line-height: 1.8;
 	color: #DADADA;
 	/* Softer light text */
+}
+
+/* General styles for smaller screens */
+@media (max-width: 768px) {
+    .main-container {
+        padding: 10px;
+    }
+
+    .main-container .greet {
+        font-size: 36px; /* Reduce font size for greetings */
+        text-align: center; /* Center-align text */
+    }
+
+    .main .cards {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Adjust card size */
+        gap: 10px; /* Reduce gap between cards */
+    }
+
+    .main .card {
+        height: 150px; /* Reduce card height */
+        padding: 10px;
+    }
+
+    .main .card p {
+        font-size: 14px; /* Smaller font for card text */
+    }
+
+    .search-box {
+        flex-direction: column; /* Stack input and buttons vertically */
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .search-box input {
+        font-size: 16px; /* Adjust input font size */
+    }
+
+    .search-box img {
+        width: 20px; /* Reduce icon size */
+    }
+
+    .result {
+        padding: 0px 2%; /* Reduce padding for results */
+        max-height: 60vh; /* Adjust max height for smaller screens */
+    }
+
+    .result-title {
+        flex-direction: column; /* Stack title elements vertically */
+        gap: 10px;
+        text-align: center;
+    }
+
+    .result-data {
+        flex-direction: column; /* Stack result data vertically */
+        gap: 10px;
+    }
+
+    .loader hr {
+        height: 15px; /* Adjust loader height */
+    }
+}
+
+/* Styles for very small screens (e.g., phones) */
+@media (max-width: 480px) {
+    .main-container .greet {
+        font-size: 28px; /* Further reduce font size */
+    }
+
+    .main .cards {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Smaller cards */
+    }
+
+    .main .card {
+        height: 120px; /* Further reduce card height */
+    }
+
+    .search-box {
+        gap: 5px; /* Reduce gap between elements */
+    }
+
+    .search-box input {
+        font-size: 14px; /* Smaller input font size */
+    }
+
+    .result {
+        max-height: 50vh; /* Further reduce max height */
+    }
 }
