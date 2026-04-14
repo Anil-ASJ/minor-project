@@ -1,62 +1,44 @@
 # Gemini Clone
 
-Gemini Clone is a project aimed at replicating the functionality of Gemini, powered by the Google Gemini API, using React and CSS.
+This project is a React + Flask chatbot UI backed by the Google Gemini API.
 
-## Introduction
+## Setup
 
-This project introduces a React-based web application that functions as a clone of the Google Gemini AI chatbot. It provides a user-friendly interface for interacting with the powerful Gemini model, allowing you to ask questions and receive informative responses in a conversational manner.
-
-## Installation
-
-1. **Clone the repository:**
-
-   ```bash
-   git clone https://github.com/niladri-1/Gemini-Chatbot.git
-   cd Gemini-Chatbot
-   ```
-
-2. **Install dependencies:**
+1. Clone the repository.
+2. Install frontend dependencies:
 
    ```bash
    npm install
    ```
 
-3. **Set up the environment variables:**
+3. Install backend dependencies:
 
-   - Create a `.env` file in the root directory.
-     ```env
-     VITE_API_KEY=Your_API_Key_Here
-     ```
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-4. **Run the project locally:**
+4. Create a `.env` file in the project root:
+
+   ```env
+   GEMINI_API_KEY=your_google_api_key_here
+   PORT=5000
+   FRONTEND_ORIGIN=http://localhost:5173,http://127.0.0.1:5173
+   ```
+
+5. Start the Flask backend:
+
+   ```bash
+   python app.py
+   ```
+
+6. Start the frontend:
 
    ```bash
    npm run dev
    ```
 
-5. **Access the application:**
+## Security Notes
 
-   Open your browser and navigate to [`http://localhost:5173`](http://localhost:5173) to use the Gemini Clone.
-
-   -----
-
-### Core Features
-
-- **Chat Interface:** Provides a dedicated interface for interacting with the Gemini model in a conversational style.
-- **Simulated Typing Effect:** Enhances the user experience by mimicking a natural typing effect during responses.
-- **Google Gemini Integration:** Utilizes the capabilities of the Google Gemini model for generating informative responses.
-
-### Additional Features
-
-- **React-based Development:** Leverages React's efficient component-based approach for building the application.
-- **CSS Styling:** Employs CSS to style the user interface for visual appeal and usability.
-
-### Potential Enhancements
-
-- **Conversation History:** Keeps a record of past interactions for reference.
-- **Advanced UI Elements:** Introduces additional features like emojis, formatting options, or user avatars.
-- **Enhanced Functionality:** Explores integrating functionalities like image search or language translation.
-
-
-
----
+- Never commit a real API key to source control.
+- Keep `.env` local only.
+- Rotate any key that was previously pushed to GitHub.
